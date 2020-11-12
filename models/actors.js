@@ -11,7 +11,12 @@ const actorSchema = new Schema({
     birthday: String,
     deathday: String,
     minority: Boolean,
-    gender: Integer,
+    gender: {
+        type: Integer,
+        minlength: 0,
+        maxlength: 2,
+        default: 0,
+    },
     socialMedia: String,
 
 })
