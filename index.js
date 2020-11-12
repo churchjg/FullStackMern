@@ -9,13 +9,20 @@ const movie = require("./models/movie");
 app.use(cors());
 app.use(parser.json());
 
-app.get("/", (req, res) => {
+//redirects to homepage
+app.get('/', (req, res)=>{
+    res.redirect("/Home")
+})
+
+//homepage
+app.get("/Home", (req, res) => {
     movie.find({}).then(data => {
         console.log(data);
         res.json(data);
     })
 
 })
+
 
 app.get("/:id", (req, res) => {
     movie.findById(req.params.id).then(data => {
