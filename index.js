@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
+const actor = require("./models/actor")
 const parser = require("body-parser");
 const cors = require("cors");
+const movie = require("./models/movie");
 
 app.use(cors());
 app.use(parser.json());
