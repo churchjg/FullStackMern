@@ -18,6 +18,7 @@ const authRouter = express.Router();
 const collectionRouter = express.Router();
 const reviewRouter = express.Router();
 
+//Authorization
 authRouter.route("/")
 .post(authCtrl.signup)
 .get(authCtrl.getAll)
@@ -27,6 +28,7 @@ authRouter.get("/logout", authCtrl.logout)
 authRouter.delete("/delete-current", authCtrl.deleteCurrent)
 authRouter.get("/current-user", authCtrl.getCurrent)
 
+//Collections
 collectionRouter.route("/")
 .get(collectionCtrl.getAll)
 .post(collectionCtrl.create)
@@ -36,6 +38,7 @@ collectionRouter.route("/:slug")
 .patch(collectionCtrl.updateOne)
 .delete(collectionCtrl.deleteOne)
 
+//Reviews
 reviewRouter.route("/")
 .post(reviewCtrl.create)
 .get(reviewCtrl.getReviews)
