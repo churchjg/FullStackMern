@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const fs = require('fs')
 
-const url = 'https://api.themoviedb.org/3/movie/api_key=672f0d697567840361c26dc792975ba7'
+const url = 'http://www.omdbapi.com/?t=&apikey=54b6e213'
 
 for (let i = 0; i < 10 ; i++) {
 fetch(url)
