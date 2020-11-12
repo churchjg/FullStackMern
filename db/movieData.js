@@ -3,7 +3,7 @@ const fs = require('fs')
 
 const url = 'https://api.themoviedb.org/3/movie/api_key=672f0d697567840361c26dc792975ba7'
 
-for (let i = 0; i < 1500 ; i++) {
+for (let i = 0; i < 10 ; i++) {
 fetch(url)
     .then(res => res.json())
     .then(res => {
