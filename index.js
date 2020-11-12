@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const Schedule = require("./models/movie")
+const actor = require("./models/movie")
 const parser = require("body-parser");
 const cors = require("cors");
 const movie = require("./models/movie");
