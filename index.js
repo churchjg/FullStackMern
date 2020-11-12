@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const actor = require("./models/movie")
+const actor = require("./models/actor")
 const parser = require("body-parser");
 const cors = require("cors");
 const movie = require("./models/movie");
@@ -48,7 +48,7 @@ app.post("/", (req, res) => {
 
 })
 
-app.post("/:id", (req, res) => {
+app.put("/:id", (req, res) => {
     movie.findOneAndUpdate(
         { _id: req.params.id },
         req.body,
@@ -61,7 +61,53 @@ app.post("/:id", (req, res) => {
 })
 
 app.delete("/:id", (req, res) => {
-    Country.findOneAndRemove(
+    movie.findOneAndRemove(
+        { _id: req.params.id }
+    ).then(data => {
+        console.log(data);
+        res.json(data);
+    })
+
+})
+
+app.get("/:id", (req, res) => {
+    actor.findById(req.params.id).then(data => {
+        console.log(data);
+        res.json(data);
+    })
+
+})
+
+app.get("/name/:name", (req, res) => {
+    actor.find({ name: req.params.name }).then(data => {
+        console.log(data);
+        res.json(data);
+    })
+
+})
+
+app.post("/", (req, res) => {
+    actor.create(req.body).then(data => {
+        console.log(data);
+        res.json(data);
+    })
+
+})
+
+app.put("/:id", (req, res) => {
+    actor.findOneAndUpdate(
+        { _id: req.params.id },
+        req.body,
+        { new: true }
+    ).then(data => {
+        console.log(data);
+        res.json(data);
+    })
+
+})
+
+app.delete("/:id", (req, res) => {
+    actor.findOneAndRemove(
         { _id: req.params.id }
     ).then(data => {
         console.log(data);
