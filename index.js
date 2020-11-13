@@ -1,18 +1,19 @@
 const express = require("express");
 const app = express();
-const actor = require("./models/actor")
 const parser = require("body-parser");
 const cors = require("cors");
-const movie = require("./models/movie");
+const dotenv = require("dotenv").config({
+    path: "./config.env"
+})
+const mongoose = require("./db/connection");
 
 app.use(cors());
 app.use(parser.json());
 
-const authCtrl = require("");
-const collectionCtrl = require("");
-const reviewCtrl = require("");
-
-const search = require("./controllers/movies");
+const authCtrl = require("./controllers/auth");
+const collectionCtrl = require("./controllers/collections");
+const reviewCtrl = require("./controllers/review");
+const search = require("./controllers/movie");
 
 const authRouter = express.Router();
 const collectionRouter = express.Router();
@@ -64,6 +65,9 @@ app.all("*", (req, res) => res.status(404).json({
     message: "this route is undefined"
 }));
 
+const PORT = process.env.PORT;
+
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
 
 
