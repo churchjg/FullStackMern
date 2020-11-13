@@ -4,20 +4,27 @@ const Schema = mongoose.Schema;
 
 
 const movieSchema = new Schema({
-    title: String,
-    image: String,
-    genres: Array,
-    keywords: String,
-    Belongs_to_collection: Object,
-    summary: String,
-    actors: String,
-    directors: String,
-    release_date: String,
-    rating: Number,
-    country: String,
-    trailer: String,
+    Title: String,
+    Title_lower: String,
+    "Release Date": String,
+    "MPAA Rating": String,
+    "Major Genre": String,
+    "Creative Type": String,
+    "Director": String,
+    Director_lower: String,
+    "Rotten Tomatoes Rating": Number,
+    "IMDB Rating": Number,
+    "IMDB Votes": Number
     })
-    
+
+movieSchema.pre("save", function(next){
+    this["Major Genre"] = this["Major Genre"].toLowerCase()
+    this.Title_lower = this.Title.toLowerCase()
+    this.Director_lower = this.Title.toLowerCase()
+    next()
+});
+
+
 
 const movie = mongoose.model("movie", movieSchema);
-module.exports = movie; 
+module.exports = movie;

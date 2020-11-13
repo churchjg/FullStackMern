@@ -1,25 +1,27 @@
-const movie = require("../models/movie");
-const catchAsync = ("./catchAsync.js")
+const User = require("../models/user");
+const catchAsync = require("./catchAsync")
 
 exports.signup = catchAsync(  async (req, res) => {
     console.log(req.body);
-    // const doc = await .find()
+    const user = User.create(req.body)
     res.json({
         status:"success",
-        // data: doc
+        data: user
     });
 })
 
 exports.getAll = catchAsync(  async (req, res) => {
-    const doc = await movie.find()
+    console.log("getallusers");
+    const users = await User.find()
+    console.log("querycomp");
     res.json({
         status:"success",
-        data: doc
+        data: users
     });
 })
 
 exports.login = catchAsync(  async (req, res) => {
-    const doc = await movie.find()
+    const doc = await User.find()
     res.json({
         status:"success",
         data: doc

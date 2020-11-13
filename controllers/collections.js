@@ -1,5 +1,5 @@
 const movie = require("../models/movie");
-const catchAsync = ("./catchAsync.js")
+const catchAsync = require("./catchAsync.js")
 
 exports.getAll = catchAsync(  async (req, res) => {
     const doc = await movie.find()

@@ -1,5 +1,5 @@
 const movie = require("../models/movie");
-const catchAsync = ("./catchAsync.js")
+const catchAsync = require("./catchAsync.js")
 
 // reviewRouter.route("/")
 // .post(reviewCtrl.create)
@@ -9,14 +9,6 @@ const catchAsync = ("./catchAsync.js")
 // .patch(reviewCtrl.update)
 // .delete(reviewCtrl.delete)
 
-exports.create = catchAsync(  async (req, res) => {
-    const doc = await movie.find()
-    res.json({
-        status:"success",
-        data: doc
-    });
-})
-
 exports.getReviews = catchAsync(  async (req, res) => {
     const doc = await movie.find()
     res.json({
@@ -25,7 +17,15 @@ exports.getReviews = catchAsync(  async (req, res) => {
     });
 })
 
-
+exports.create = catchAsync(  async (req, res) => {
+    console.log(req.body)
+    if (!req.body.name) return res.status(400).json({message:"please include correct movie name"})
+    const doc = await movie.create(req.body)
+    res.json({
+        status:"success",
+        data: doc
+    });
+})
 exports.update = catchAsync(  async (req, res) => {
     const doc = await movie.find()
     res.json({
