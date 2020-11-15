@@ -27,5 +27,8 @@
   "bugs": {
     "url": "https://github.com/churchjg/FullStackMern/issues"
   },
-  "homepage": "https://github.com/churchjg/FullStackMern#readme"
+  "homepage": "https://github.com/churchjg/FullStackMern#readme",
+  "engines": {
+  "node": "^12"
+}
 }
