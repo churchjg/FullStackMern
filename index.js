@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const parser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const dotenv = require("dotenv").config({
     path: "./config.env"
@@ -9,6 +10,7 @@ const mongoose = require("./db/connection");
 
 app.use(cors());
 app.use(parser.json());
+app.use(cookieParser());
 
 const authCtrl = require("./controllers/auth");
 const collectionCtrl = require("./controllers/collections");
@@ -22,11 +24,11 @@ const reviewRouter = express.Router();
 //Authorization
 authRouter.route("/")
 .post(authCtrl.signup)
-.get(authCtrl.getAll)
+//.get(authCtrl.getAll)
 
 authRouter.post("/login", authCtrl.login)
+authRouter.use(authCtrl.protect) //middleware
 authRouter.get("/logout", authCtrl.logout)
-authRouter.delete("/delete-current", authCtrl.deleteCurrent)
 authRouter.get("/current-user", authCtrl.getCurrent)
 
 //Collections

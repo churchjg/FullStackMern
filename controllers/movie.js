@@ -1,6 +1,8 @@
 const Movie = require("../models/movie");
 const catchAsync = require("./catchAsync")
 
+//filter algorithm
+
 module.exports = catchAsync(async (req, res) => {
     const filters = {}
     if (req.query.rating) filters["MPAA Rating"] = req.query.rating.toUpperCase()
