@@ -34,12 +34,12 @@ authRouter.get("/current-user", authCtrl.getCurrent)
 //Collections
 collectionRouter.route("/")
 .get(collectionCtrl.getAll)
-.post(collectionCtrl.create)
+.post(authCtrl.protect, collectionCtrl.create)
 
 collectionRouter.route("/:slug")
 .get(collectionCtrl.getOne)
-.patch(collectionCtrl.updateOne)
-.delete(collectionCtrl.deleteOne)
+.patch(authCtrl.protect, collectionCtrl.updateOne)
+.delete(authCtrl.protect, collectionCtrl.deleteOne)
 
 //Reviews
 reviewRouter.route("/")
