@@ -1,5 +1,7 @@
 const User = require("../models/user");
-const catchAsync = require("./catchAsync")
+const catchAsync = require("./catchAsync");
+const jwt = require("jsonwebtoken");
+const {promisify} = require("util");
 
 exports.signup = catchAsync(  async (req, res) => {
     console.log(req.body);
@@ -21,34 +23,78 @@ exports.getAll = catchAsync(  async (req, res) => {
 })
 
 exports.login = catchAsync(  async (req, res) => {
-    const doc = await User.find()
+    const {email, password} = req.body
+    if (!email || !password) return res.status(400).json({
+        status:"fail",
+        message:"need email and password"
+    });
+    const user = await User.findOne({email}).select("+password")
+    if (!user) return res.status(400).json({
+        status:"fail",
+        message:"email not found"
+    });
+    const correctLogin = await user.comparePasswords(password, user.password)
+    if (!correctLogin) return res.status(400).json({
+        status:"fail",
+        message:"need correct login"
+    });
+    const token = jwt.sign({id:user._id}, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRY //key card, not password, token for login
+    })
+    res.cookie("jwt", token, {
+        expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRY * 1000 * 60 * 60 * 24), //good for 90 days
+        secure: req.secure || req.headers["x-forwarded-proto" === "https"],
+        httpOnly: true
+    }) //storing the token
+
+    user.password = undefined
+
     res.json({
         status:"success",
-        data: doc
+        data: user,
+        token
     });
 })
+
+//middleware (no response, filters out not logged in users)
+exports.protect = catchAsync(  async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    let token;
+    if (authHeader && authHeader.startsWith("Bearer")) token = authHeader.split(" ")[1];
+    else if (req.cookies.jwt) token = req.cookies.jwt;
+    if (!token) return res.status(400).json({
+        status:"fail",
+        message:"not logged in"
+    });
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
+
+    const currentUser = await User.findById(decoded.id)
+    if (!currentUser) return res.status(400).json({
+        status:"fail",
+        message:"not logged in"
+    });
+    req.user = currentUser; //req.user.id (validates the user, saves current users id)
+    next()
+})
+
+
 
 exports.logout = catchAsync(  async (req, res) => {
-    const doc = await movie.find()
+res.cookie("jwt", "logged out", {
+    expires: new Date(Date.now()+ 10000), //set the token to expire in 10 secs, auto delete the cookie, have to sign in again
+    httpOnly: true
+})
     res.json({
-        status:"success",
-        data: doc
+        status:"success"
     });
 })
 
-exports.deleteCurrent = catchAsync(  async (req, res) => {
-    const doc = await movie.find()
-    res.json({
-        status:"success",
-        data: doc
-    });
-})
 
 exports.getCurrent = catchAsync(  async (req, res) => {
-    const doc = await movie.find()
+
     res.json({
         status:"success",
-        data: doc
+        data: req.user
     });
 })
 
