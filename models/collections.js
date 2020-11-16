@@ -20,6 +20,11 @@ const collectionsSchema = new mongoose.Schema({
         igUrl: String,
         id: String
     }],
+    createdBy: {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+        required: [true, "must have a creator"]
+    },
     slug: String
 
 
