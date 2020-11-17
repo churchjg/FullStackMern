@@ -1,5 +1,6 @@
 const Review = require("../models/reviews");
 const catchAsync = require("./catchAsync.js")
+const Movie = require("../models/movie")
 
 // reviewRouter.route("/")
 // .post(reviewCtrl.create)
@@ -10,10 +11,11 @@ const catchAsync = require("./catchAsync.js")
 // .delete(reviewCtrl.delete)
 
 exports.getReviews = catchAsync(  async (req, res) => {
-    const doc = await Review.find()
+    const docs = await Review.find()
     res.json({
         status:"success",
-        data: doc
+        results: docs.length,
+        data: docs
     });
 })
 
@@ -23,13 +25,17 @@ exports.create = catchAsync(  async (req, res) => {
     const reviewData = Object.assign({}, req.body)
     reviewData.createdBy = req.user.id;
     const doc = await Review.create(reviewData)
+    const movie = await Movie.findById(reviewData.movie)
+    if (!movie.reviews) movie.reviews = []
+    movie.reviews.push(doc._id)
+    await movie.save()
     res.json({
         status:"success",
         data: doc
     });
 })
 exports.update = catchAsync(  async (req, res) => {
-    const doc = await Review.findByIdAndUpdate(req.params.id, req.body, {
+    const doc = await Review.findOneAndUpdate({_id: req.params.id, createdBy: req.user.id}, req.body, {
         runValidators: true,
         new: true
     })
@@ -41,9 +47,9 @@ exports.update = catchAsync(  async (req, res) => {
 })
 
 exports.delete = catchAsync(  async (req, res) => {
-    const doc = await movie.find()
+    await Review.findOneAndDelete({_id: req.params.id, createdBy: req.user.id})
     res.json({
         status:"success",
-        data: doc
+        data: null
     });
 })

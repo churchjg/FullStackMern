@@ -27,7 +27,10 @@ const reviewSchema = Schema({
         type: Date,
         default: Date.now()
     }
-})
+}, {
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true}
+  })
 
 reviewSchema.pre("save", function(next){
     this.lastEdited = Date.now()

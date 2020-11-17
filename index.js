@@ -8,6 +8,7 @@ const dotenv = require("dotenv").config({
 })
 const mongoose = require("./db/connection");
 
+
 app.use(cors());
 app.use(parser.json());
 app.use(cookieParser());
@@ -16,6 +17,7 @@ const authCtrl = require("./controllers/auth");
 const collectionCtrl = require("./controllers/collections");
 const reviewCtrl = require("./controllers/review");
 const search = require("./controllers/movie");
+const seed = require("./controllers/seed");
 
 const authRouter = express.Router();
 const collectionRouter = express.Router();
@@ -50,6 +52,7 @@ reviewRouter.route("/:id")
 .patch(authCtrl.protect, reviewCtrl.update)
 .delete(authCtrl.protect, reviewCtrl.delete)
 
+app.post("/api/seed", seed)
 
 app.get("/api/movies", search) //titles
 
