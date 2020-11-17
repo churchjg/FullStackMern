@@ -24,6 +24,12 @@ movieSchema.pre("save", function(next){
     next()
 });
 
+movieSchema.virtual("reviews", {
+    ref: "Review",
+    foreignField: "movie",
+    localField: "_id"
+}) //virtual populate: query database for all reviews
+
 
 
 const movie = mongoose.model("movie", movieSchema);

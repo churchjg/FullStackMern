@@ -15,20 +15,24 @@ const collectionsSchema = new mongoose.Schema({
     },
     description: String,
     movies: [{
-        name: String,
-        country: String,
-        igUrl: String,
-        id: String
+        type: mongoose.Schema.ObjectId,
+        ref: "movie"
     }],
     createdBy: {
         type: mongoose.Schema.ObjectId,
         ref: "User",
         required: [true, "must have a creator"]
     },
-    slug: String
-
-
+    slug: {
+        type: String,
+        unique: true
+    }
 });
+
+collectionsSchema.pre(/^find/, function(next){ //match any "find" query thru mongoose
+    this.populate("movies").populate("createdBy") //populate all movies from mongoDB and User
+    next()
+})
 
 collectionsSchema.pre("save", function(next){
     this.slug = slugify(this.name, {

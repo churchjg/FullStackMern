@@ -43,12 +43,12 @@ collectionRouter.route("/:slug")
 
 //Reviews
 reviewRouter.route("/")
-.post(reviewCtrl.create) // /api/reviews
+.post(authCtrl.protect, reviewCtrl.create) // /api/reviews
 .get(reviewCtrl.getReviews) // /api/reviews
 
 reviewRouter.route("/:id")
-.patch(reviewCtrl.update)
-.delete(reviewCtrl.delete)
+.patch(authCtrl.protect, reviewCtrl.update)
+.delete(authCtrl.protect, reviewCtrl.delete)
 
 
 app.get("/api/movies", search) //titles
@@ -57,7 +57,7 @@ app.use("/auth", authRouter) // /auth/login
 
 app.use("/api/collections", collectionRouter) // /api/collections/:slug
 
-app.use("/api/reviews", reviewRouter)
+app.use("/api/reviews", reviewRouter)  // api/reviews (getAll) api/reviews/id (getOne, Update, Delete)
 
 
 app.get("/", (req, res) => res.redirect("/api/collections"))
