@@ -8,6 +8,7 @@ const dotenv = require("dotenv").config({
 })
 const mongoose = require("./db/connection");
 
+
 app.use(cors());
 app.use(parser.json());
 app.use(cookieParser());
@@ -16,6 +17,7 @@ const authCtrl = require("./controllers/auth");
 const collectionCtrl = require("./controllers/collections");
 const reviewCtrl = require("./controllers/review");
 const search = require("./controllers/movie");
+const seed = require("./controllers/seed");
 
 const authRouter = express.Router();
 const collectionRouter = express.Router();
@@ -43,13 +45,14 @@ collectionRouter.route("/:slug")
 
 //Reviews
 reviewRouter.route("/")
-.post(reviewCtrl.create) // /api/reviews
+.post(authCtrl.protect, reviewCtrl.create) // /api/reviews
 .get(reviewCtrl.getReviews) // /api/reviews
 
 reviewRouter.route("/:id")
-.patch(reviewCtrl.update)
-.delete(reviewCtrl.delete)
+.patch(authCtrl.protect, reviewCtrl.update)
+.delete(authCtrl.protect, reviewCtrl.delete)
 
+app.post("/api/seed", seed)
 
 app.get("/api/movies", search) //titles
 
@@ -57,7 +60,7 @@ app.use("/auth", authRouter) // /auth/login
 
 app.use("/api/collections", collectionRouter) // /api/collections/:slug
 
-app.use("/api/reviews", reviewRouter)
+app.use("/api/reviews", reviewRouter)  // api/reviews (getAll) api/reviews/id (getOne, Update, Delete)
 
 
 app.get("/", (req, res) => res.redirect("/api/collections"))
