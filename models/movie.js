@@ -24,6 +24,8 @@ const movieSchema = new Schema({
       toObject: {virtuals: true}
     })
 
+
+//pre middleware before any search
 movieSchema.pre(/^find/, function(next){ //match any "find" query thru mongoose
     this.populate("reviews") //populate all reviews from mongoDB and User
     next()
