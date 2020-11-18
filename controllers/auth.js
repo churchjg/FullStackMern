@@ -22,6 +22,11 @@ exports.getAll = catchAsync(  async (req, res) => {
     });
 })
 
+//compare encrpyt password w/ user password
+//once validated, issue web token
+//token hits protect
+//validates the token
+//cookies stores the token, cookie everytime user makes a request for validation
 exports.login = catchAsync(  async (req, res) => {
     const {email, password} = req.body
     if (!email || !password) return res.status(400).json({
@@ -47,7 +52,7 @@ exports.login = catchAsync(  async (req, res) => {
         httpOnly: true
     }) //storing the token
 
-    user.password = undefined
+    user.password = undefined //preventing password from exposed to clients
 
     res.json({
         status:"success",
@@ -56,7 +61,7 @@ exports.login = catchAsync(  async (req, res) => {
     });
 })
 
-//middleware (no response, filters out not logged in users)
+//protect middleware: protects routers from unauth users (no response, filters out not logged in users)
 exports.protect = catchAsync(  async (req, res, next) => {
     const authHeader = req.headers.authorization;
     let token;
@@ -89,7 +94,7 @@ res.cookie("jwt", "logged out", {
     });
 })
 
-
+//current users info "My Account"
 exports.getCurrent = catchAsync(  async (req, res) => {
 
     res.json({

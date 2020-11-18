@@ -12,7 +12,7 @@ const getJSON = async () => {
   module.exports = catchAsync(async (req, res) => {
     if (req.body.password != process.env.SEED_PASSWORD) return res.json({
         status: "fail",
-        message: "you do not have permission to seed the database" //seeding from postman
+        message: "you do not have permission to seed the database" //seeding from postman instead of running a new script
     })
     await Movie.deleteMany();
     const data = await getJSON();

@@ -52,7 +52,7 @@ reviewRouter.route("/:id")
 .patch(authCtrl.protect, reviewCtrl.update)
 .delete(authCtrl.protect, reviewCtrl.delete)
 
-app.post("/api/seed", seed)
+app.post("/api/seed", seed) 
 
 app.get("/api/movies", search) //titles
 
