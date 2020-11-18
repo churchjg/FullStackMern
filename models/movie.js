@@ -14,15 +14,26 @@ const movieSchema = new Schema({
     Director_lower: String,
     "Rotten Tomatoes Rating": Number,
     "IMDB Rating": Number,
-    "IMDB Votes": Number
+    "IMDB Votes": Number,
+    reviews: [{
+        type: mongoose.Schema.ObjectId,
+        ref: "Review"
+    }]
+    },{
+      toJSON: {virtuals: true},
+      toObject: {virtuals: true}
     })
 
-movieSchema.pre("save", function(next){
-    this["Major Genre"] = this["Major Genre"].toLowerCase()
-    this.Title_lower = this.Title.toLowerCase()
-    this.Director_lower = this.Title.toLowerCase()
+movieSchema.pre(/^find/, function(next){ //match any "find" query thru mongoose
+    this.populate("reviews") //populate all reviews from mongoDB and User
     next()
-});
+})
+
+// movieSchema.virtual("reviews", {
+//     ref: "Review",
+//     foreignField: "movie",
+//     localField: "_id"
+//}) //virtual populate: query database for all reviews
 
 
 

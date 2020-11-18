@@ -1,19 +1,23 @@
 const express = require("express");
 const app = express();
 const parser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const dotenv = require("dotenv").config({
     path: "./config.env"
 })
 const mongoose = require("./db/connection");
 
+
 app.use(cors());
 app.use(parser.json());
+app.use(cookieParser());
 
 const authCtrl = require("./controllers/auth");
 const collectionCtrl = require("./controllers/collections");
 const reviewCtrl = require("./controllers/review");
 const search = require("./controllers/movie");
+const seed = require("./controllers/seed");
 
 const authRouter = express.Router();
 const collectionRouter = express.Router();
@@ -21,41 +25,42 @@ const reviewRouter = express.Router();
 
 //Authorization
 authRouter.route("/")
-.post(authCtrl.signup)
-.get(authCtrl.getAll)
+.post(authCtrl.signup) //auth/signup
+//.get(authCtrl.getAll)
 
-authRouter.post("/login", authCtrl.login)
+authRouter.post("/login", authCtrl.login) // /auth/login
+authRouter.use(authCtrl.protect) //middleware
 authRouter.get("/logout", authCtrl.logout)
-authRouter.delete("/delete-current", authCtrl.deleteCurrent)
 authRouter.get("/current-user", authCtrl.getCurrent)
 
 //Collections
 collectionRouter.route("/")
-.get(collectionCtrl.getAll)
-.post(collectionCtrl.create)
+.get(collectionCtrl.getAll) // /api/collections
+.post(authCtrl.protect, collectionCtrl.create)
 
 collectionRouter.route("/:slug")
-.get(collectionCtrl.getOne)
-.patch(collectionCtrl.updateOne)
-.delete(collectionCtrl.deleteOne)
+.get(collectionCtrl.getOne) // /api/collections/:slug (slug is referencing name of collection created by user)
+.patch(authCtrl.protect, collectionCtrl.updateOne) // /:slug
+.delete(authCtrl.protect, collectionCtrl.deleteOne)
 
 //Reviews
 reviewRouter.route("/")
-.post(reviewCtrl.create)
-.get(reviewCtrl.getReviews)
+.post(authCtrl.protect, reviewCtrl.create) // /api/reviews
+.get(reviewCtrl.getReviews) // /api/reviews
 
 reviewRouter.route("/:id")
-.patch(reviewCtrl.update)
-.delete(reviewCtrl.delete)
+.patch(authCtrl.protect, reviewCtrl.update)
+.delete(authCtrl.protect, reviewCtrl.delete)
 
+app.post("/api/seed", seed)
 
-app.get("/api/movies", search)
+app.get("/api/movies", search) //titles
 
-app.use("/auth", authRouter)
+app.use("/auth", authRouter) // /auth/login
 
-app.use("/api/collections", collectionRouter)
+app.use("/api/collections", collectionRouter) // /api/collections/:slug
 
-app.use("/api/reviews", reviewRouter)
+app.use("/api/reviews", reviewRouter)  // api/reviews (getAll) api/reviews/id (getOne, Update, Delete)
 
 
 app.get("/", (req, res) => res.redirect("/api/collections"))
