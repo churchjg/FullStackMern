@@ -25,7 +25,7 @@ const reviewRouter = express.Router();
 
 //Authorization
 authRouter.route("/")
-.post(authCtrl.signup) //auth/signup
+    .post(authCtrl.signup) //auth/signup
 //.get(authCtrl.getAll)
 
 authRouter.post("/login", authCtrl.login) // /auth/login
@@ -35,24 +35,24 @@ authRouter.get("/current-user", authCtrl.getCurrent)
 
 //Collections
 collectionRouter.route("/")
-.get(collectionCtrl.getAll) // /api/collections
-.post(authCtrl.protect, collectionCtrl.create)
+    .get(collectionCtrl.getAll) // /api/collections
+//.post(authCtrl.protect, collectionCtrl.create)
 
 collectionRouter.route("/:slug")
-.get(collectionCtrl.getOne) // /api/collections/:slug (slug is referencing name of collection created by user)
-.patch(authCtrl.protect, collectionCtrl.updateOne) // /:slug
-.delete(authCtrl.protect, collectionCtrl.deleteOne)
+    .get(collectionCtrl.getOne) // /api/collections/:slug (slug is referencing name of collection created by user)
+    .patch(authCtrl.protect, collectionCtrl.updateOne) // /:slug
+    .delete(authCtrl.protect, collectionCtrl.deleteOne)
 
 //Reviews
 reviewRouter.route("/")
-.post(authCtrl.protect, reviewCtrl.create) // /api/reviews
-.get(reviewCtrl.getReviews) // /api/reviews
+    .post(authCtrl.protect, reviewCtrl.create) // /api/reviews
+    .get(reviewCtrl.getReviews) // /api/reviews
 
 reviewRouter.route("/:id")
-.patch(authCtrl.protect, reviewCtrl.update)
-.delete(authCtrl.protect, reviewCtrl.delete)
+    .patch(authCtrl.protect, reviewCtrl.update)
+    .delete(authCtrl.protect, reviewCtrl.delete)
 
-app.post("/api/seed", seed) 
+app.post("/api/seed", seed)
 
 app.get("/api/movies", search) //titles
 
