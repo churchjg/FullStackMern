@@ -6,6 +6,16 @@ mongoose.connect(DB, {
     useUnifiedTopology: true,
     useCreateIndex: true,
     useFindAndModify: false
-}).then(()=>console.log("db connection success")).catch(err=>console.log(err));
+}).then(() => console.log("db connection success")).catch(err => console.log(err));
+
+/*let mongoURI = "";
+if (process.env.NODE_ENV === "production") {
+    mongoURI = process.env.DB_URL;
+} else {
+    mongoURI = "mongodb://localhost/users";
+}
+mongoose.connect(mongoURI, {
+    useUnifiedTopology: true,
+});*/
 
 module.exports = mongoose;
