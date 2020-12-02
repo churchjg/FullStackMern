@@ -22,7 +22,7 @@ exports.getAll = catchAsync(async(req, res) => {
             data: users
         });
     })
-    //work
+    //workherp
     //compare encrpyt password w/ user password
     //once validated, issue web token
     //token hits protect
