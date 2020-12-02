@@ -2,6 +2,7 @@ const User = require("../models/user");
 const catchAsync = require("./catchAsync");
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
+const { db } = require("../models/user");
 
 exports.signup = catchAsync(async (req, res) => {
     console.log(req.body);
@@ -28,12 +29,17 @@ exports.getAll = catchAsync(async (req, res) => {
 //validates the token
 //cookies stores the token, cookie everytime user makes a request for validation
 exports.login = catchAsync(async (req, res) => {
+    console.log("We're in login!")
     const { email, password } = req.body
+    console.log(req.body)
     if (!email || !password) return res.status(400).json({
         status: "fail",
         message: "need email and password"
     });
-    const user = await User.findOne({ email }).select("+password")
+    const user = await User.findOne({ email: email }).select("+password")
+    //const testing = User.findOne({ email: "testing@test.com" })
+    console.log("user", user)
+
     if (!user) return res.status(400).json({
         status: "fail",
         message: "email not found"
@@ -43,6 +49,9 @@ exports.login = catchAsync(async (req, res) => {
         status: "fail",
         message: "need correct login"
     });
+    /*const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRY //key card, not password, token for login
+    })*/
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRY //key card, not password, token for login
     })
